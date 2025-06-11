@@ -1,0 +1,92 @@
+# --- Arquivos de Ambiente e Segredos ---
+# NUNCA envie segredos, senhas ou chaves de API para o repositório!
+# Este é o arquivo mais importante a ser ignorado.
+.env
+*.env
+.env.*
+
+
+# --- Bytecode e cache do Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+
+# --- Ambientes Virtuais do Python ---
+# Pastas de ambientes como venv, env, etc.
+venv/
+.venv/
+env/
+env.bak/
+venv.bak/
+
+
+# --- Banco de Dados Local ---
+# Ignora o banco de dados SQLite, caso seja usado para testes locais.
+db.sqlite3
+db.sqlite3-journal
+
+
+# --- Arquivos de Mídia e Estáticos coletados pelo Django ---
+# Estes arquivos são gerados pela aplicação e não devem estar no controle de versão.
+# Ajuste os nomes se o seu STATIC_ROOT ou MEDIA_ROOT for diferente.
+staticfiles/
+mediafiles/
+
+
+# --- Arquivos de Pacotes e Distribuição do Python ---
+build/
+dist/
+*.egg-info/
+sdist/
+*.egg
+wheels/
+
+
+# --- Arquivos de Testes e Cobertura ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+
+
+# --- Arquivos de Log e Cache ---
+*.log
+*.log.*
+local_settings.py
+
+
+# --- Arquivos de IDE e Editores de Código ---
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# PyCharm
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Outros
+*.swp
+*.swo
+
+
+# --- Arquivos de Sistema Operacional ---
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
