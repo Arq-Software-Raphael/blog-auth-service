@@ -2,8 +2,7 @@
 # NUNCA envie segredos, senhas ou chaves de API para o repositório!
 # Este é o arquivo mais importante a ser ignorado.
 .env
-*.env
-.env.*
+.env
 
 
 # --- Bytecode e cache do Python ---
