@@ -1,27 +1,33 @@
 # docker-compose.yml
 
-version: '3.8'
-
 services:
   app:
     build: .
     restart: always
     volumes:
-      - .:/app # Mapeia o código para desenvolvimento (hot-reload)
+      - .:/app
     ports:
       - "8000:8000"
-    env_file:
-      - ./.env # Carrega as variáveis de ambiente do arquivo .env
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      DEBUG: ${DEBUG}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: db
     depends_on:
-      - db # Garante que o serviço 'db' inicie antes do 'app'
+      - db
 
   db:
-    image: postgres:13-alpine # Imagem leve do Postgres
+    image: postgres:16-alpine
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    env_file:
-      - ./.env # Também usa as variáveis para configurar o banco
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
 volumes:
-  postgres_data: # Define um volume nomeado para persistir os dados do banco
+  postgres_data:

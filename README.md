@@ -6,32 +6,39 @@ O projeto é totalmente containerizado com Docker e utiliza PostgreSQL como banc
 
 ---
 
-## ✨ Funcionalidades Principais
+## Índice
 
-- 🔐 **Autenticação por JWT:** Geração de tokens de acesso (`access`) e atualização (`refresh`) usando `djangorestframework-simplejwt`.
-- 👤 **Modelo de Usuário Customizado:** Sistema de login baseado em `email` e senha, sem a necessidade de `username`.
-- 📝 **Endpoints Essenciais:**
-  - Registro de novos usuários.
-  - Login para obter tokens.
-  - Logout com blacklist de tokens de atualização.
-  - Endpoint para obter um novo token de acesso (`refresh`).
-- 🔒 **Rotas Protegidas:** Endpoints que exigem um token de acesso válido para serem acessados.
-- 🐳 **Ambiente Dockerizado:** Configuração completa com Docker e Docker Compose para fácil instalação e deploy.
-- 🐘 **Banco de Dados PostgreSQL:** Pronto para um ambiente de produção.
+- [Funcionalidades](#-funcionalidades)
+- [Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [Guia de Instalação e Execução](#-guia-de-instalação-e-execução)
+- [Testando a API](#-testando-a-api)
+- [Documentação dos Endpoints](#-documentação-dos-endpoints)
+- [Variáveis de Ambiente](#-variáveis-de-ambiente)
+- [Licença](#-licença)
+
+---
+
+## ✨ Funcionalidades
+
+- 🔐 **Autenticação por JWT:** Utiliza `djangorestframework-simplejwt` para gerar tokens de acesso (`access`) e de atualização (`refresh`).
+- 👤 **Modelo de Usuário Customizado:** Sistema de login baseado em `email` e senha.
+- 📝 **Endpoints Essenciais:** Registro, Login, Logout (com blacklist de tokens) e Refresh de token.
+- 🔒 **Rotas Protegidas:** Endpoints que só podem ser acessados por usuários autenticados.
+- 🐳 **Ambiente Dockerizado:** Configuração completa com Docker e Docker Compose.
+- 🐘 **Banco de Dados PostgreSQL:** Pronto para um ambiente de produção robusto.
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
-![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=for-the-badge&logo=python)
-![Django](https://img.shields.io/badge/Django-4.2-092E20?style=for-the-badge&logo=django)
-![Django REST Framework](https://img.shields.io/badge/DRF-3.14-A30000?style=for-the-badge&logo=django)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13-336791?style=for-the-badge&logo=postgresql)
-![Docker](https://img.shields.io/badge/Docker-20.10-2496ED?style=for-the-badge&logo=docker)
+- **Backend:** Python 3.11, Django 4.2 (LTS), Django Rest Framework
+- **Banco de Dados:** PostgreSQL 16
+- **Servidor WSGI:** Gunicorn
+- **Containerização:** Docker & Docker Compose
 
 ---
 
-## 🔧 Configuração do Ambiente
+## 🔧 Guia de Instalação e Execução
 
 Siga os passos abaixo para configurar e rodar a API em seu ambiente de desenvolvimento.
 
@@ -45,8 +52,8 @@ Siga os passos abaixo para configurar e rodar a API em seu ambiente de desenvolv
 1.  **Clone o repositório:**
 
     ```bash
-    git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
-    cd seu-repositorio
+    git clone [https://github.com/seu-usuario/seu-repositorio-backend.git](https://github.com/seu-usuario/seu-repositorio-backend.git)
+    cd seu-repositorio-backend
     ```
 
 2.  **Crie o arquivo de ambiente (`.env`):**
@@ -58,25 +65,25 @@ Siga os passos abaixo para configurar e rodar a API em seu ambiente de desenvolv
 
     > **Importante:** Abra o arquivo `.env` e gere uma nova `SECRET_KEY` para garantir a segurança do seu projeto.
 
-3.  **Execute as Migrações do Banco de Dados (Apenas na primeira vez):**
-    Para garantir que o banco de dados seja criado corretamente a partir do zero, é recomendado seguir este processo de "reset limpo":
+3.  **Execute as Migrações do Banco de Dados (Apenas na primeira vez ou para um reset):**
+    Para garantir que o banco de dados seja criado corretamente a partir do zero, siga este processo:
 
     ```bash
-    # (Opcional) Destrói qualquer contêiner ou volume antigo
+    # (Opcional, mas recomendado para um início limpo) Destrói qualquer contêiner ou volume antigo
     docker compose down -v
 
     # Remove a pasta de migrações local para garantir que não haja conflitos
     rm -rf core/migrations/
 
     # Cria os novos arquivos de migração a partir dos seus modelos
-    docker compose run --rm --entrypoint "" app python manage.py makemigrations core
+    docker compose run --rm app python manage.py makemigrations core
 
     # Aplica as migrações para criar as tabelas no banco de dados
-    docker compose run --rm --entrypoint "" app python manage.py migrate
+    docker compose run --rm app python manage.py migrate
     ```
 
 4.  **Inicie os serviços com Docker Compose:**
-    Este comando irá construir a imagem da aplicação e iniciar os contêineres do Django e do PostgreSQL em segundo plano.
+    Este comando irá construir a imagem da aplicação e iniciar os contêineres em segundo plano.
     ```bash
     docker compose up --build -d
     ```
@@ -87,7 +94,7 @@ Neste ponto, a API estará rodando e acessível em `http://localhost:8000`.
 
 ## 🧪 Testando a API
 
-Você pode usar ferramentas como [Insomnia](https://insomnia.rest/), [Postman](https://www.postman.com/) ou `curl` para interagir com os endpoints.
+Você pode usar ferramentas como [Insomnia](https://insomnia.rest/), [Postman](https://www.postman.com/) ou o comando `curl` no terminal para interagir com os endpoints.
 
 #### Exemplo 1: Registrar um Novo Usuário
 
@@ -127,20 +134,20 @@ curl -X GET http://localhost:8000/api/auth/me/ \
 
 O prefixo base para todos os endpoints é `/api/auth`.
 
-| Rota (Endpoint)    | Método | Descrição                                                    | Protegida? | Corpo (Payload) Exemplo                                                       |
-| :----------------- | :----- | :----------------------------------------------------------- | :--------- | :---------------------------------------------------------------------------- |
-| `/register/`       | `POST` | Registra um novo usuário.                                    | Não        | `{"email": "user@example.com", "password": "...", "password_confirm": "..."}` |
-| `/login/`          | `POST` | Autentica um usuário e retorna tokens JWT.                   | Não        | `{"email": "user@example.com", "password": "..."}`                            |
-| `/token/refresh/`  | `POST` | Gera um novo token de acesso usando um token de atualização. | Não        | `{"refresh": "seu_refresh_token"}`                                            |
-| `/logout/`         | `POST` | Adiciona o token de atualização à blacklist, invalidando-o.  | Sim        | `{"refresh_token": "seu_refresh_token"}`                                      |
-| `/me/`             | `GET`  | Retorna os dados do usuário autenticado.                     | Sim        | N/A                                                                           |
-| `/users/<int:pk>/` | `GET`  | Retorna os dados públicos de um usuário específico.          | Sim        | N/A                                                                           |
+| Rota (Endpoint)    | Método | Descrição                                             | Protegida? |
+| :----------------- | :----- | :---------------------------------------------------- | :--------- |
+| `/register/`       | `POST` | Registra um novo usuário.                             | Não        |
+| `/login/`          | `POST` | Autentica um usuário e retorna tokens JWT.            | Não        |
+| `/token/refresh/`  | `POST` | Gera um novo token de acesso usando um refresh token. | Não        |
+| `/logout/`         | `POST` | Adiciona o refresh token à blacklist, invalidando-o.  | Sim        |
+| `/me/`             | `GET`  | Retorna os dados do usuário autenticado.              | Sim        |
+| `/users/<int:pk>/` | `GET`  | Retorna os dados públicos de um usuário específico.   | Sim        |
 
 ---
 
 ## ⚙️ Variáveis de Ambiente
 
-Configure as seguintes variáveis no seu arquivo `.env`.
+Configure as seguintes variáveis no seu arquivo `.env` na raiz do projeto.
 
 | Variável            | Descrição                                                       | Exemplo                 |
 | :------------------ | :-------------------------------------------------------------- | :---------------------- |
