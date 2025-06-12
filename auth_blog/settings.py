@@ -59,16 +59,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'drf_spectacular',
 ]
-
-# auth_blog/settings.py
-
-# ... (outras configurações)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # O middleware do CORS deve vir o mais alto possível
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -154,10 +150,10 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',   
 }
 
-# Simple JWT Settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -166,7 +162,7 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,  # Use a mesma SECRET_KEY do Django
+    'SIGNING_KEY': SECRET_KEY,  
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
@@ -217,10 +213,11 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",  # Endereço do seu app React (Vite)
-#     "http://localhost:3000",  # Endereço comum se usar Create React App
-# ]
-CORS_ALLOW_ALL_ORIGINS = False  # Defina como False ao usar a lista de permissão
+CORS_ALLOW_ALL_ORIGINS = False 
 
 AUTH_USER_MODEL = 'core.CustomUser'
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Documentação da API Usuários',
+    'VERSION': '1.0.0',
+}
