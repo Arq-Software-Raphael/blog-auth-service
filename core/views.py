@@ -18,7 +18,7 @@ class RegisterView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Usuário registrado com sucesso."}, status=status.HTTP_201_CREATED)
-        print("Erros de validação:", serializer.errors)  # <-- debug print aqui
+        print("Erros de validação:", serializer.errors)  
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -44,7 +44,7 @@ class UserDetailView(APIView):
     def get(self, request, pk):
         try:
             user = User.objects.get(pk=pk)
-            if user != request.user and not request.user.is_staff:
+            if user != request.user:
                 return Response({"detail": "Acesso negado."}, status=status.HTTP_403_FORBIDDEN)
             serializer = UserSerializer(user)
             return Response(serializer.data)
